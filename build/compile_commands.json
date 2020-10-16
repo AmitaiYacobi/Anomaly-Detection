@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/amitai/ass1/Anomaly-Detection/build",
-  "command": "/bin/c++  -Danomaly_detection_EXPORTS  -g -fPIC   -o CMakeFiles/anomaly-detection.dir/MainTrain.cpp.o -c /home/amitai/ass1/Anomaly-Detection/MainTrain.cpp",
-  "file": "/home/amitai/ass1/Anomaly-Detection/MainTrain.cpp"
-}
-]

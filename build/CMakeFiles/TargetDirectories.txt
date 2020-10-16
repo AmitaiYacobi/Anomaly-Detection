@@ -1,5 +1,0 @@
-/home/amitai/ass1/Anomaly-Detection/build/CMakeFiles/package_source.dir
-/home/amitai/ass1/Anomaly-Detection/build/CMakeFiles/rebuild_cache.dir
-/home/amitai/ass1/Anomaly-Detection/build/CMakeFiles/package.dir
-/home/amitai/ass1/Anomaly-Detection/build/CMakeFiles/edit_cache.dir
-/home/amitai/ass1/Anomaly-Detection/build/CMakeFiles/anomaly-detection.dir
