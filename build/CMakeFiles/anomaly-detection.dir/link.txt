@@ -1,0 +1,1 @@
+/bin/c++ -fPIC -g  -shared -Wl,-soname,libanomaly-detection.so -o libanomaly-detection.so CMakeFiles/anomaly-detection.dir/MainTrain.cpp.o 

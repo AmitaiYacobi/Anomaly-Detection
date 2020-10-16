@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/amitai/ass1/Anomaly-Detection/MainTrain.cpp
+iostream
+-
+anomaly_detection_util.h
+/home/amitai/ass1/Anomaly-Detection/anomaly_detection_util.h
+
+/home/amitai/ass1/Anomaly-Detection/anomaly_detection_util.h
+
