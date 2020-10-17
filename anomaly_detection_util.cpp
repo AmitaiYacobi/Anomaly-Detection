@@ -9,6 +9,7 @@
 #include "anomaly_detection_util.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 float avg(float *x, int size) {
   float sum = 0;
@@ -58,8 +59,8 @@ Line linear_reg(Point **points, int size) {
   float *y = new float[size];
 
   for (int i = 0; i < size; i++) {
-    x[i] = points[i]->getX();
-    y[i] = points[i]->getY();
+    x[i] = points[i]->x;
+    y[i] = points[i]->y;
   }
   float a = cov(x, y, size) / var(x, size);
   float b = avg(y, size) - a * avg(x, size);
@@ -70,16 +71,16 @@ Line linear_reg(Point **points, int size) {
 // returns the deviation between point p and the line equation of the points
 float dev(Point p, Point **points, int size) {
   Line line = linear_reg(points, size);
-  float fx = line.f(p.getX());
-  float y = p.getY();
+  float fx = line.f(p.x);
+  float y = p.y;
 
   return abs(fx - y);
 }
 
 // returns the deviation between point p and the line
 float dev(Point p, Line l) {
-  float fx = l.f(p.getX());
-  float y = p.getY();
+  float fx = l.f(p.x);
+  float y = p.y;
 
   return abs(fx - y);
 }
