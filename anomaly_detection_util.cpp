@@ -82,5 +82,5 @@ float dev(Point p, Line l) {
   float fx = l.f(p.x);
   float y = p.y;
 
-  return abs(fx - y);
+  return fabs(fx - y);
 }
