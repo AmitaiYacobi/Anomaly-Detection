@@ -74,7 +74,7 @@ float dev(Point p, Point **points, int size) {
   float fx = line.f(p.x);
   float y = p.y;
 
-  return abs(fx - y);
+  return fabs(fx - y);
 }
 
 // returns the deviation between point p and the line
