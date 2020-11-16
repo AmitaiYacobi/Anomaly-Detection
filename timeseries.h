@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -14,20 +15,22 @@ using namespace std;
 
 class TimeSeries {
   const char *fileName;
-  map<string, vector<float>> *ts;
-  string *featuresNames;
+  map<string, vector<float>> data;
+  vector<string> featuresNames;
 
 public:
   TimeSeries(const char *CSVfileName) {
     this->fileName = CSVfileName;
-    this->ts = readCsv();
+    this->data = readCsv();
   }
-  virtual ~TimeSeries() {}
+  virtual ~TimeSeries();
 
-  virtual map<string, vector<float>> *readCsv();
-  virtual string *getFeaturesNames();
-  virtual vector<float> getFeatureValues(string s);
-  virtual float getFeatureValue(string s, int i);
+  virtual map<string, vector<float>> readCsv();
+  virtual vector<string> getFeaturesNames() const;
+  virtual vector<float> getFeatureValues(string s) const;
+  virtual map<string, vector<float>> getData() const;
+  virtual int getFeaturePosition(string s) const;
+  virtual float getFeatureValue(string s, int i) const;
 };
 
-#endif /* TIMESERIES_H_ */
+#endif /*TIMESERIES_H_*/

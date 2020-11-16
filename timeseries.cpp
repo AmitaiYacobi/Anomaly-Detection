@@ -3,29 +3,24 @@
 map<string, vector<float>> TimeSeries::readCsv() {
 
   ifstream csvFile(this->fileName);
-
   if (!csvFile.is_open()) {
     throw runtime_error("Could not open file");
   }
 
   string line;
   string featureName;
-  string *colNames = {};
-  map<string, vector<float>> ts;
+  vector<string> colNames;
+  map<string, vector<float>> result;
   float val;
-  int i = 0;
-  int j = 1;
+  int j = 0;
 
   // Reading the first line of the file which is the columns names
   if (csvFile.good()) {
-
     getline(csvFile, line);
     stringstream strStream(line);
-
     while (getline(strStream, featureName, ',')) {
-      colNames[i] = featureName;
-      ts[featureName] = vector<float>{};
-      i++;
+      colNames.push_back(featureName);
+      result[featureName] = vector<float>{};
     }
   }
 
@@ -34,7 +29,7 @@ map<string, vector<float>> TimeSeries::readCsv() {
     j = 0;
     stringstream strStream(line);
     while (strStream >> val) {
-      ts[colNames[j]].push_back(val);
+      result[colNames[j]].push_back(val);
       if (strStream.peek() == ',')
         strStream.ignore();
       j++;
@@ -43,16 +38,30 @@ map<string, vector<float>> TimeSeries::readCsv() {
 
   csvFile.close();
   this->featuresNames = colNames;
-  return ts;
+  return result;
+}
+int TimeSeries::getFeaturePosition(string s) const {
+  vector<string>::iterator it;
+  auto vec = this->featuresNames;
+  int position = 0;
+
+  it = find(vec.begin(), vec.end(), s);
+  position = distance(vec.begin(), it);
+  return position;
 }
 
-string *TimeSeries::getFeaturesNames() { return this->featuresNames; }
-
-vector<float> TimeSeries::getFeatureValues(string s) { return this->ts[s]; }
-
-float TimeSeries::getFeatureValue(string s, int i) { return this->ts[s][i]; }
-
-TimeSeries::~TimeSeries() {
-  delete this->fileName;
-  delete this->featuresNames;
+vector<string> TimeSeries::getFeaturesNames() const {
+  return this->featuresNames;
 }
+
+vector<float> TimeSeries::getFeatureValues(string s) const {
+  return this->data.at(s);
+}
+
+float TimeSeries::getFeatureValue(string s, int i) const {
+  return this->data.at(s)[i];
+}
+
+map<string, vector<float>> TimeSeries::getData() const { return this->data; }
+
+TimeSeries::~TimeSeries() { delete this->fileName; }

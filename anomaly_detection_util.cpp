@@ -68,6 +68,13 @@ Line linear_reg(Point **points, int size) {
   return Line(a, b);
 }
 
+Line linear_reg(float *x, float *y, int size) {
+  float a = cov(x, y, size) / var(x, size);
+  float b = avg(y, size) - a * avg(x, size);
+
+  return Line(a, b);
+}
+
 // returns the deviation between point p and the line equation of the points
 float dev(Point p, Point **points, int size) {
   Line line = linear_reg(points, size);
