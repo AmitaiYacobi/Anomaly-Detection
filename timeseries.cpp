@@ -51,3 +51,8 @@ string *TimeSeries::getFeaturesNames() { return this->featuresNames; }
 vector<float> TimeSeries::getFeatureValues(string s) { return this->ts[s]; }
 
 float TimeSeries::getFeatureValue(string s, int i) { return this->ts[s][i]; }
+
+TimeSeries::~TimeSeries() {
+  delete this->fileName;
+  delete this->featuresNames;
+}

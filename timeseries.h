@@ -14,7 +14,7 @@ using namespace std;
 
 class TimeSeries {
   const char *fileName;
-  map<string, vector<float>> ts;
+  map<string, vector<float>> *ts;
   string *featuresNames;
 
 public:
@@ -22,9 +22,9 @@ public:
     this->fileName = CSVfileName;
     this->ts = readCsv();
   }
-  ~TimeSeries() { delete fileName; }
+  virtual ~TimeSeries() {}
 
-  virtual map<string, vector<float>> readCsv();
+  virtual map<string, vector<float>> *readCsv();
   virtual string *getFeaturesNames();
   virtual vector<float> getFeatureValues(string s);
   virtual float getFeatureValue(string s, int i);
