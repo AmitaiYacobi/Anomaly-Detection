@@ -5,7 +5,7 @@
  *
  * Author: write your ID and name here
  */
-
+#include "AnomalyDetector.h"
 #include "anomaly_detection_util.h"
 #include <math.h>
 #include <stdio.h>
