@@ -9,7 +9,6 @@
 #include <time.h>   /* time */
 #include <vector>
 
-
 using namespace std;
 
 // this is a simple test to put you on the right track
@@ -77,9 +76,9 @@ int main() {
   TimeSeries ts("trainFile1.csv");
   SimpleAnomalyDetector ad;
   ad.learnNormal(ts);
-  vector<correlatedFeatures> cf = ad.getNormalModel();
+  // vector<correlatedFeatures> cf = ad.getNormalModel();
 
-  if (cf.size() != 2)
+  /*if (cf.size() != 2)
     cout << "wrong size of correlated features (-40)" << endl;
   else
     for_each(cf.begin(), cf.end(), [&a1, &b1, &a2, &b2](correlatedFeatures c) {
@@ -111,6 +110,6 @@ int main() {
     cout << "you have " << falseAlarms << " false alarms (-"
          << min(30, falseAlarms * 3) << ")" << endl;
 
-  cout << "done" << endl;
+  cout << "done" << endl;*/
   return 0;
 }

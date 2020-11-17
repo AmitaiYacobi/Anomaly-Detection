@@ -40,6 +40,7 @@ map<string, vector<float>> TimeSeries::readCsv() {
   this->featuresNames = colNames;
   return result;
 }
+
 int TimeSeries::getFeaturePosition(string s) const {
   vector<string>::iterator it;
   auto vec = this->featuresNames;
@@ -50,16 +51,18 @@ int TimeSeries::getFeaturePosition(string s) const {
   return position;
 }
 
+float TimeSeries::getFeatureValue(string s, int i) const {
+  auto dt = this->data.at(s)[i];
+  return dt;
+}
+
 vector<string> TimeSeries::getFeaturesNames() const {
   return this->featuresNames;
 }
 
 vector<float> TimeSeries::getFeatureValues(string s) const {
-  return this->data.at(s);
-}
-
-float TimeSeries::getFeatureValue(string s, int i) const {
-  return this->data.at(s)[i];
+  auto dt = this->data.at(s);
+  return dt;
 }
 
 map<string, vector<float>> TimeSeries::getData() const { return this->data; }
