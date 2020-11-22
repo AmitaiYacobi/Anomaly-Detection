@@ -76,9 +76,9 @@ int main() {
   TimeSeries ts("trainFile1.csv");
   SimpleAnomalyDetector ad;
   ad.learnNormal(ts);
-  // vector<correlatedFeatures> cf = ad.getNormalModel();
+  vector<correlatedFeatures> cf = ad.getNormalModel();
 
-  /*if (cf.size() != 2)
+  if (cf.size() != 2)
     cout << "wrong size of correlated features (-40)" << endl;
   else
     for_each(cf.begin(), cf.end(), [&a1, &b1, &a2, &b2](correlatedFeatures c) {
@@ -91,6 +91,7 @@ int main() {
   int anomaly = 5 + rand() % 90; // one anomaly injected in a random time step
   generateTestCSV(a1, b1, a2, b2, anomaly);
   TimeSeries ts2("testFile1.csv");
+  ad.detect(ts2);
   vector<AnomalyReport> r = ad.detect(ts2);
 
   bool anomlyDetected = false;
@@ -110,6 +111,6 @@ int main() {
     cout << "you have " << falseAlarms << " false alarms (-"
          << min(30, falseAlarms * 3) << ")" << endl;
 
-  cout << "done" << endl;*/
+  cout << "done" << endl;
   return 0;
 }
