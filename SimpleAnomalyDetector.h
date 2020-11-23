@@ -17,6 +17,12 @@ struct correlatedFeatures {
   float threshold;
 };
 
+/**
+ * @brief Represents a simple anomaly detector which can test and
+ * train a time-series data.
+ *
+ *
+ */
 class SimpleAnomalyDetector : public TimeSeriesAnomalyDetector {
   vector<correlatedFeatures> cf;
 

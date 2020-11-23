@@ -5,6 +5,15 @@ SimpleAnomalyDetector::SimpleAnomalyDetector() {}
 
 SimpleAnomalyDetector::~SimpleAnomalyDetector() {}
 
+/**
+ * @brief Create a Correlation struct that defined in "SimpleAnomalyDetector.h".
+ * This struct contains a pair of features which are correlated with each other.
+ *
+ * @param s1 feature name
+ * @param s2 feature name
+ * @param ts the data
+ * @return correlatedFeatures
+ */
 correlatedFeatures createCorrelation(string s1, string s2,
                                      const TimeSeries &ts) {
 
@@ -49,6 +58,12 @@ correlatedFeatures createCorrelation(string s1, string s2,
   return correlated;
 }
 
+/**
+ * @brief Learns a normal data and defines linear regression of every pair of
+ * correlated features.
+ *
+ * @param ts given data.
+ */
 void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
 
   map<string, vector<float>>::iterator it1;
@@ -92,6 +107,12 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
   this->cf = cf;
 }
 
+/**
+ * @brief Detect anomalies in the data and reports on them.
+ *
+ * @param ts given data.
+ * @return vector<AnomalyReport> of the anomalies reports.
+ */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
 
   vector<AnomalyReport> ar;

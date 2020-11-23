@@ -3,7 +3,7 @@
 /*
  * anomaly_detection_util.cpp
  *
- * Author: write your ID and name here
+ * Author: Amitai Yacobi 316418300
  */
 #include "AnomalyDetector.h"
 #include "anomaly_detection_util.h"
@@ -19,7 +19,13 @@ float avg(float *x, int size) {
   return sum / size;
 }
 
-// returns the variance of X and Y
+/**
+ * @brief Returns the variance of X and Y
+ *
+ * @param x
+ * @param size
+ * @return float
+ */
 float var(float *x, int size) {
   float sum = 0;
   float eX = avg(x, size);
@@ -30,7 +36,14 @@ float var(float *x, int size) {
   return varX;
 }
 
-// returns the covariance of X and Y
+/**
+ * @brief Returns the covariance of X and Y
+ *
+ * @param x
+ * @param y
+ * @param size
+ * @return float
+ */
 float cov(float *x, float *y, int size) {
 
   float *xy = new float[size];
@@ -45,7 +58,14 @@ float cov(float *x, float *y, int size) {
   return covXY;
 }
 
-// returns the Pearson correlation coefficient of X and Y
+/**
+ * @brief Returns the Pearson correlation coefficient of X and Y
+ *
+ * @param x
+ * @param y
+ * @param size
+ * @return float
+ */
 float pearson(float *x, float *y, int size) {
 
   float standardDeviation = sqrt(var(x, size) * var(y, size));
@@ -53,7 +73,13 @@ float pearson(float *x, float *y, int size) {
   return cov(x, y, size) / standardDeviation;
 }
 
-// performs a linear regression and returns the line equation
+/**
+ * @brief Performs a linear regression and returns the line equation
+ *
+ * @param points
+ * @param size
+ * @return Line
+ */
 Line linear_reg(Point **points, int size) {
   float *x = new float[size];
   float *y = new float[size];
@@ -78,7 +104,15 @@ Line linear_reg(float *x, float *y, int size) {
   return Line(a, b);
 }
 
-// returns the deviation between point p and the line equation of the points
+/**
+ * @brief Returns the deviation between point p and the line equation of the
+ * points
+ *
+ * @param p
+ * @param points
+ * @param size
+ * @return float
+ */
 float dev(Point p, Point **points, int size) {
   Line line = linear_reg(points, size);
   float fx = line.f(p.x);
@@ -87,7 +121,13 @@ float dev(Point p, Point **points, int size) {
   return fabs(fx - y);
 }
 
-// returns the deviation between point p and the line
+/**
+ * @brief Returns the deviation between point p and the line
+ *
+ * @param p
+ * @param l
+ * @return float
+ */
 float dev(Point p, Line l) {
   float fx = l.f(p.x);
   float y = p.y;

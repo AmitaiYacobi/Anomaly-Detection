@@ -13,6 +13,11 @@
 
 using namespace std;
 
+/**
+ * @brief Represents the data which we want to test and train in order
+ * to detect anomalies.
+ */
+
 class TimeSeries {
   const char *fileName;
   map<string, vector<float>> data;
@@ -23,7 +28,7 @@ public:
     this->fileName = CSVfileName;
     this->data = readCsv();
   }
-
+  ~TimeSeries() {}
   virtual map<string, vector<float>> readCsv();
   virtual vector<string> getFeaturesNames() const;
   virtual vector<float> getFeatureValues(string s) const;
