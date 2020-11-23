@@ -60,7 +60,7 @@ correlatedFeatures createCorrelation(string s1, string s2,
 
 /**
  * @brief Learns a normal data and defines linear regression of every pair of
- * correlated features.
+ * features which have the biggest correlation between each other.
  *
  * @param ts given data.
  */
