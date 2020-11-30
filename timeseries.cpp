@@ -1,3 +1,4 @@
+// 316418300 Amitai Yacobi
 #include "timeseries.h"
 
 /**
@@ -8,7 +9,6 @@
  * @return map<string, vector<float>>
  */
 map<string, vector<float>> TimeSeries::readCsv() {
-
   ifstream csvFile(this->fileName);
   if (!csvFile.is_open()) {
     throw runtime_error("Could not open file");
@@ -37,8 +37,7 @@ map<string, vector<float>> TimeSeries::readCsv() {
     stringstream strStream(line);
     while (strStream >> val) {
       result[colNames[j]].push_back(val);
-      if (strStream.peek() == ',')
-        strStream.ignore();
+      if (strStream.peek() == ',') strStream.ignore();
       j++;
     }
   }
