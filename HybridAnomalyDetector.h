@@ -5,12 +5,16 @@
 
 #include "SimpleAnomalyDetector.h"
 #include "minCircle.h"
-
+/**
+ * @brief Another type of anomaly detector which detecs the anomalies by using
+ * an algorithm to find minimal enclosing cirlce.
+ *
+ */
 class HybridAnomalyDetector : public SimpleAnomalyDetector {
- public:
+public:
   HybridAnomalyDetector();
-  virtual void learnNormal(const TimeSeries& ts);
-  virtual vector<AnomalyReport> detect(const TimeSeries& ts);
+  virtual void learnNormal(const TimeSeries &ts);
+  virtual vector<AnomalyReport> detect(const TimeSeries &ts);
   virtual AnomalyReport createReport(correlatedFeatures cf, Point p, int i);
   virtual ~HybridAnomalyDetector();
 };

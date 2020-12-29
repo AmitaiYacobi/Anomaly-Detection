@@ -56,9 +56,12 @@ void generateTestCSV(float a1, float b1, float a2, float b2, float a3,
 
     for (auto it = anomalies.begin(); it != anomalies.end(); it++) {
       if ((*it).timeStep == i) {
-        if ((*it).description == "A-B") b++;
-        if ((*it).description == "C-D") d++;
-        if ((*it).description == "E-F") r = 111;
+        if ((*it).description == "A-B")
+          b++;
+        if ((*it).description == "C-D")
+          d++;
+        if ((*it).description == "E-F")
+          r = 111;
       }
     }
     float an = 45 - 40 + rand() % 70;
@@ -117,16 +120,16 @@ int main() {
   else
     for_each(cf.begin(), cf.end(),
              [&a1, &b1, &a2, &b2, &a3, &b3](correlatedFeatures c) {
-               checkCorrelation(c, "A", "B", a1, b1);  // 10 points
-               checkCorrelation(c, "C", "D", a2, b2);  // 10 points
-               checkCorrelation(c, "E", "F", a3, b3);  // 20 points
+               checkCorrelation(c, "A", "B", a1, b1); // 10 points
+               checkCorrelation(c, "C", "D", a2, b2); // 10 points
+               checkCorrelation(c, "E", "F", a3, b3); // 20 points
              });
 
   // test the anomaly detector: (60 points)
   // one simply anomaly is injected to the data
-  int anomaly1 = 5 + rand() % 90;  // anomaly injected in a random time step
-  int anomaly2 = 5 + rand() % 90;  // anomaly injected in a random time step
-  int anomaly3 = 5 + rand() % 90;  // anomaly injected in a random time step
+  int anomaly1 = 5 + rand() % 90; // anomaly injected in a random time step
+  int anomaly2 = 5 + rand() % 90; // anomaly injected in a random time step
+  int anomaly3 = 5 + rand() % 90; // anomaly injected in a random time step
 
   anomalies.push_back(AnomalyReport("A-B", anomaly1));
   anomalies.push_back(AnomalyReport("C-D", anomaly2));

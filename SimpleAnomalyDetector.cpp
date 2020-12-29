@@ -24,15 +24,15 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
  * @return correlatedFeatures
  */
 correlatedFeatures createCorrelation(string s1, string s2,
-                                     const TimeSeries& ts) {
+                                     const TimeSeries &ts) {
   correlatedFeatures correlated;
   auto mp = ts.getData();
   int position1 = ts.getFeaturePosition(s1);
   int position2 = ts.getFeaturePosition(s2);
   int size;
   float max = 0;
-  float* x;
-  float* y;
+  float *x;
+  float *y;
 
   correlated.feature1 = (position1 < position2) ? s1 : s2;
   correlated.feature2 = (position2 > position1) ? s2 : s1;
@@ -41,7 +41,7 @@ correlatedFeatures createCorrelation(string s1, string s2,
   x = v1.data();
   y = v2.data();
   size = v2.size();
-  Point** points = new Point*[size];
+  Point **points = new Point *[size];
 
   for (int i = 0; i < size; ++i) {
     points[i] = new Point(x[i], y[i]);
@@ -62,12 +62,35 @@ correlatedFeatures createCorrelation(string s1, string s2,
 }
 
 /**
+ * @brief Creates anomaly report
+ *
+ * @param cf correlatedFeatures struct
+ * @param p point created from the correlated features
+ * @param i the current row of the data
+ * @return AnomalyReport
+ */
+AnomalyReport SimpleAnomalyDetector::createReport(correlatedFeatures f, Point p,
+                                                  int i) {
+
+  Line line = f.lin_reg;
+  string description;
+  string feature1 = f.feature1;
+  string feature2 = f.feature2;
+  float threshold = f.threshold;
+  if (dev(p, line) > threshold) {
+    description = feature1 + '-' + feature2;
+    return AnomalyReport(description, i + 1);
+  }
+  return AnomalyReport("", -1);
+}
+
+/**
  * @brief Learns a normal data and defines linear regression of every pair of
  * features which have the biggest correlation between each other.
  *
  * @param ts given data.
  */
-void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
+void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
   map<string, vector<float>>::iterator it1;
   map<string, vector<float>>::iterator it2;
   vector<correlatedFeatures> cf;
@@ -81,8 +104,8 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
   bool flag;
   float threshold;
   float correlation = 0;
-  float* x;
-  float* y;
+  float *x;
+  float *y;
 
   for (it1 = mp.begin(); it1 != mp.end(); it1++) {
     flag = false;
@@ -108,34 +131,14 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
   }
   this->cf = cf;
 }
+
 /**
- * @brief
- *
- * @param cf
- * @param p
- * @param i
- * @return AnomalyReport
- */
-AnomalyReport SimpleAnomalyDetector::createReport(correlatedFeatures f, Point p,
-                                                  int i) {
-  Line line = f.lin_reg;
-  string description;
-  string feature1 = f.feature1;
-  string feature2 = f.feature2;
-  float threshold = f.threshold;
-  if (dev(p, line) > threshold) {
-    description = feature1 + '-' + feature2;
-    return AnomalyReport(description, i + 1);
-  }
-  return AnomalyReport("", -1);
-}
-/**
- * @brief Detect anomalies in the data and reports on them.
+ * @brief Detects anomalies in the data and reports them.
  *
  * @param ts given data.
  * @return vector<AnomalyReport> of the anomalies reports.
  */
-vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts) {
+vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
   vector<AnomalyReport> ar;
   vector<correlatedFeatures>::iterator vecIt;
   auto mp = ts.getData();
@@ -148,7 +151,8 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts) {
     for (vecIt = cf.begin(); vecIt != cf.end(); vecIt++) {
       Point p(mp[vecIt->feature1][i], mp[vecIt->feature2][i]);
       AnomalyReport r = createReport(*vecIt, p, i);
-      if (r.timeStep == -1) continue;
+      if (r.timeStep == -1)
+        continue;
       ar.push_back(r);
     }
   }
