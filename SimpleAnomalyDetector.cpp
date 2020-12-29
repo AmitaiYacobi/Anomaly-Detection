@@ -4,7 +4,15 @@
 
 SimpleAnomalyDetector::SimpleAnomalyDetector() {}
 
-SimpleAnomalyDetector::~SimpleAnomalyDetector() {}
+SimpleAnomalyDetector::~SimpleAnomalyDetector() {
+  vector<correlatedFeatures>::iterator it;
+  for (it = this->cf.begin(); it != this->cf.end(); it++) {
+    for (int i = 0; i < it->size; ++i) {
+      delete it->points[i];
+    }
+    delete it->points;
+  }
+}
 
 /**
  * @brief Create a Correlation struct that defined in "SimpleAnomalyDetector.h".
@@ -33,14 +41,13 @@ correlatedFeatures createCorrelation(string s1, string s2,
   x = v1.data();
   y = v2.data();
   size = v2.size();
-
   Point** points = new Point*[size];
 
   for (int i = 0; i < size; ++i) {
     points[i] = new Point(x[i], y[i]);
   }
 
-  correlated.lin_reg = linear_reg(points, size);
+  correlated.lin_reg = linear_reg(x, y, size);
 
   for (int i = 0; i < size; ++i) {
     if (dev(*points[i], correlated.lin_reg) >= max)
@@ -49,12 +56,8 @@ correlatedFeatures createCorrelation(string s1, string s2,
 
   max = max * 1.1;
   correlated.threshold = max;
-
-  for (int i = 0; i < size; ++i) {
-    delete points[i];
-  }
-
-  delete points;
+  correlated.points = points;
+  correlated.size = size;
   return correlated;
 }
 
@@ -83,7 +86,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
 
   for (it1 = mp.begin(); it1 != mp.end(); it1++) {
     flag = false;
-    threshold = 0.9;
+    threshold = 0.5;
     feature1 = it1->first;
     x = it1->second.data();
     for (it2 = ++it1; it2 != mp.end(); it2++) {
@@ -105,7 +108,27 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
   }
   this->cf = cf;
 }
-
+/**
+ * @brief
+ *
+ * @param cf
+ * @param p
+ * @param i
+ * @return AnomalyReport
+ */
+AnomalyReport SimpleAnomalyDetector::createReport(correlatedFeatures f, Point p,
+                                                  int i) {
+  Line line = f.lin_reg;
+  string description;
+  string feature1 = f.feature1;
+  string feature2 = f.feature2;
+  float threshold = f.threshold;
+  if (dev(p, line) > threshold) {
+    description = feature1 + '-' + feature2;
+    return AnomalyReport(description, i + 1);
+  }
+  return AnomalyReport("", -1);
+}
 /**
  * @brief Detect anomalies in the data and reports on them.
  *
@@ -115,27 +138,18 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts) {
   vector<AnomalyReport> ar;
   vector<correlatedFeatures>::iterator vecIt;
-  string feature1;
-  string feature2;
-  string description;
   auto mp = ts.getData();
   auto cf = this->cf;
-  auto size = ts.getFeatureValues(cf[0].feature1).size();
+  auto size = cf[0].size;
   float d;
   float threshold;
 
   for (int i = 0; i < size; ++i) {
     for (vecIt = cf.begin(); vecIt != cf.end(); vecIt++) {
       Point p(mp[vecIt->feature1][i], mp[vecIt->feature2][i]);
-      Line line = vecIt->lin_reg;
-      feature1 = vecIt->feature1;
-      feature2 = vecIt->feature2;
-      threshold = vecIt->threshold;
-      d = dev(p, line);
-      if (d > threshold) {
-        description = feature1 + '-' + feature2;
-        ar.push_back(AnomalyReport(description, i + 1));
-      }
+      AnomalyReport r = createReport(*vecIt, p, i);
+      if (r.timeStep == -1) continue;
+      ar.push_back(r);
     }
   }
   return ar;
