@@ -30,6 +30,7 @@ struct correlatedFeatures {
  */
 class SimpleAnomalyDetector : public TimeSeriesAnomalyDetector {
   vector<correlatedFeatures> cf;
+  float threshold;
 
 public:
   SimpleAnomalyDetector();
@@ -37,6 +38,8 @@ public:
 
   virtual void learnNormal(const TimeSeries &ts);
   virtual vector<AnomalyReport> detect(const TimeSeries &ts);
+  virtual float getThreshold();
+  virtual float setThreshold(float t);
   virtual AnomalyReport createReport(correlatedFeatures cf, Point p, int i);
   vector<correlatedFeatures> getNormalModel() { return this->cf; }
 };

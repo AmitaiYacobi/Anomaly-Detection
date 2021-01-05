@@ -8,18 +8,18 @@
  *
  * @return map<string, vector<float>>
  */
-map<string, vector<float>> TimeSeries::readCsv() {
-  ifstream csvFile(this->fileName);
-  if (!csvFile.is_open()) {
-    throw runtime_error("Could not open file");
-  }
-
+map<string, vector<float>> TimeSeries::readCsv(const char *CSVfileName) {
   string line;
   string featureName;
   vector<string> colNames;
   map<string, vector<float>> result;
   float val;
   int j = 0;
+
+  ifstream csvFile(CSVfileName);
+  if (!csvFile.is_open()) {
+    throw runtime_error("Could not open file");
+  }
 
   // Reading the first line of the file which is the columns names
   if (csvFile.good()) {
@@ -37,7 +37,8 @@ map<string, vector<float>> TimeSeries::readCsv() {
     stringstream strStream(line);
     while (strStream >> val) {
       result[colNames[j]].push_back(val);
-      if (strStream.peek() == ',') strStream.ignore();
+      if (strStream.peek() == ',')
+        strStream.ignore();
       j++;
     }
   }

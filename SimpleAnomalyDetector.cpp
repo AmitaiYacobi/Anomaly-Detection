@@ -2,7 +2,7 @@
 
 #include "SimpleAnomalyDetector.h"
 
-SimpleAnomalyDetector::SimpleAnomalyDetector() {}
+SimpleAnomalyDetector::SimpleAnomalyDetector() { this->threshold = 0.9; }
 
 SimpleAnomalyDetector::~SimpleAnomalyDetector() {
   vector<correlatedFeatures>::iterator it;
@@ -13,7 +13,12 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
     delete it->points;
   }
 }
+float SimpleAnomalyDetector::getThreshold() { return this->threshold; }
 
+float SimpleAnomalyDetector::setThreshold(float t) {
+  this->threshold = t;
+  return t;
+}
 /**
  * @brief Create a Correlation struct that defined in "SimpleAnomalyDetector.h".
  * This struct contains a pair of features which are correlated with each other.
@@ -76,8 +81,9 @@ AnomalyReport SimpleAnomalyDetector::createReport(correlatedFeatures f, Point p,
   string description;
   string feature1 = f.feature1;
   string feature2 = f.feature2;
-  float threshold = f.threshold;
-  if (dev(p, line) > threshold) {
+  float disThreshold = f.threshold; // the distance threshold- the maximum
+                                    // valid length between a point to the line
+  if (dev(p, line) > disThreshold) {
     description = feature1 + '-' + feature2;
     return AnomalyReport(description, i + 1);
   }
@@ -140,17 +146,16 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
  */
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
   vector<AnomalyReport> ar;
-  vector<correlatedFeatures>::iterator vecIt;
+  vector<correlatedFeatures>::iterator it;
   auto mp = ts.getData();
   auto cf = this->cf;
   auto size = cf[0].size;
   float d;
   float threshold;
-
-  for (int i = 0; i < size; ++i) {
-    for (vecIt = cf.begin(); vecIt != cf.end(); vecIt++) {
-      Point p(mp[vecIt->feature1][i], mp[vecIt->feature2][i]);
-      AnomalyReport r = createReport(*vecIt, p, i);
+  for (it = cf.begin(); it != cf.end(); it++) {
+    for (int i = 0; i < size; ++i) {
+      Point p(mp[it->feature1][i], mp[it->feature2][i]);
+      AnomalyReport r = createReport(*it, p, i);
       if (r.timeStep == -1)
         continue;
       ar.push_back(r);

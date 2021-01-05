@@ -9,11 +9,10 @@
 #include "math.h"
 #include "timeseries.h"
 
-
 using namespace std;
 
 class AnomalyReport {
- public:
+public:
   const string description;
   const long timeStep;
   AnomalyReport(string description, long timeStep)
@@ -21,9 +20,9 @@ class AnomalyReport {
 };
 
 class TimeSeriesAnomalyDetector {
- public:
-  virtual void learnNormal(const TimeSeries& ts) = 0;
-  virtual vector<AnomalyReport> detect(const TimeSeries& ts) = 0;
+public:
+  virtual void learnNormal(const TimeSeries &ts) = 0;
+  virtual vector<AnomalyReport> detect(const TimeSeries &ts) = 0;
   virtual ~TimeSeriesAnomalyDetector() {}
 };
 

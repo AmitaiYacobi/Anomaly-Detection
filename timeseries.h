@@ -21,17 +21,18 @@ using namespace std;
  */
 
 class TimeSeries {
-  const char* fileName;
+  const char *fileName;
   map<string, vector<float>> data;
   vector<string> featuresNames;
 
- public:
-  TimeSeries(const char* CSVfileName) {
+public:
+  TimeSeries(const char *CSVfileName) {
     this->fileName = CSVfileName;
-    this->data = readCsv();
+    this->data = readCsv(CSVfileName);
   }
   ~TimeSeries() {}
-  virtual map<string, vector<float>> readCsv();
+  virtual map<string, vector<float>> readCsv(const char *CSVfileName);
+
   virtual vector<string> getFeaturesNames() const;
   virtual vector<float> getFeatureValues(string s) const;
   virtual map<string, vector<float>> getData() const;
