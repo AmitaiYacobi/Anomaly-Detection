@@ -4,7 +4,7 @@
 
 #include <math.h>
 #include <stdlib.h> /* srand, rand */
-#include <time.h> /* time */
+#include <time.h>   /* time */
 
 #include <iostream>
 #include <vector>
@@ -16,14 +16,10 @@ using namespace std;
 // ------------ DO NOT CHANGE -----------
 
 class Circle {
-public:
-    Point center;
-    float radius;
-    Circle(Point c, float r)
-        : center(c)
-        , radius(r)
-    {
-    }
+ public:
+  Point center;
+  float radius;
+  Circle(Point c, float r) : center(c), radius(r) {}
 };
 // --------------------------------------
 
