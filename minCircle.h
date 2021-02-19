@@ -4,7 +4,7 @@
 
 #include <math.h>
 #include <stdlib.h> /* srand, rand */
-#include <time.h> /* time */
+#include <time.h>   /* time */
 
 #include <iostream>
 #include <vector>
@@ -17,13 +17,9 @@ using namespace std;
 
 class Circle {
 public:
-    Point center;
-    float radius;
-    Circle(Point c, float r)
-        : center(c)
-        , radius(r)
-    {
-    }
+  Point center;
+  float radius;
+  Circle(Point c, float r) : center(c), radius(r) {}
 };
 // --------------------------------------
 
@@ -35,10 +31,10 @@ Point circumcenter(Point b, Point c);
 
 Circle from3Points(Point a, Point b, Point c);
 
-Circle trivial(vector<Point>& P);
+Circle trivial(vector<Point> &P);
 
-Circle welzl(Point** P, vector<Point> R, size_t n);
-Circle findMinCircle(Point** points, size_t size);
-Circle findMinCircle(float* x, float* y, int size);
+Circle welzl(Point **P, vector<Point> R, size_t n);
+Circle findMinCircle(Point **points, size_t size);
+Circle findMinCircle(float *x, float *y, int size);
 
 #endif /* MINCIRCLE_H_ */

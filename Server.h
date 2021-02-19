@@ -20,7 +20,7 @@ using namespace std;
 // edit your ClientHandler interface here:
 class ClientHandler {
 public:
-    virtual void handle(int clientID) = 0;
+  virtual void handle(int clientID) = 0;
 };
 
 // you can add helper classes here and implement on the cpp file
@@ -28,48 +28,47 @@ public:
 // edit your AnomalyDetectionHandler class here
 class AnomalyDetectionHandler : public ClientHandler {
 
-    DefaultIO* dio;
+  DefaultIO *dio;
 
 public:
-    virtual void handle(int clientID)
-    {
-        this->dio = new SocketIO(clientID);
-        CLI cli(dio);
-        cli.start();
-    }
+  virtual void handle(int clientID) {
+    this->dio = new SocketIO(clientID);
+    CLI cli(dio);
+    cli.start();
+  }
 };
 
 // implement on Server.cpp
 class Server {
-    thread* t; // the thread to run the start() method in
-    int port;
-    int serverFD;
-    int clientID;
-    struct sockaddr_in serverAddress;
-    struct sockaddr_in clientAddress;
-    bool stop_flag;
+  thread *t; // the thread to run the start() method in
+  int port;
+  int serverFD;
+  int clientID;
+  struct sockaddr_in serverAddress;
+  struct sockaddr_in clientAddress;
+  bool stop_flag;
 
 public:
-    Server(int port) throw(const char*);
-    virtual ~Server();
-    /**
+  Server(int port) throw(const char *);
+  virtual ~Server();
+  /**
    * @brief Initializes a new socket.
    *
    */
-    void initialize() throw(const char*);
+  void initialize() throw(const char *);
 
-    /**
+  /**
    * @brief Activates the server for listening and also activates given
    * ClientHandler for connecting to the new connected client.
    *
    * @param ch ClientHandler&
    */
-    void start(ClientHandler& ch) throw(const char*);
-    /**
+  void start(ClientHandler &ch) throw(const char *);
+  /**
    * @brief Closes the server.
    *
    */
-    void stop();
+  void stop();
 };
 
 #endif /* SERVER_H_ */

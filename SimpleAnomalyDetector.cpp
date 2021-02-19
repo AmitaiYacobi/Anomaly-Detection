@@ -4,22 +4,20 @@
 
 SimpleAnomalyDetector::SimpleAnomalyDetector() { this->threshold = 0.9; }
 
-SimpleAnomalyDetector::~SimpleAnomalyDetector()
-{
-    vector<correlatedFeatures>::iterator it;
-    for (it = this->cf.begin(); it != this->cf.end(); it++) {
-        for (int i = 0; i < it->size; ++i) {
-            delete it->points[i];
-        }
-        delete it->points;
+SimpleAnomalyDetector::~SimpleAnomalyDetector() {
+  vector<correlatedFeatures>::iterator it;
+  for (it = this->cf.begin(); it != this->cf.end(); it++) {
+    for (int i = 0; i < it->size; ++i) {
+      delete it->points[i];
     }
+    delete it->points;
+  }
 }
 float SimpleAnomalyDetector::getThreshold() { return this->threshold; }
 
-float SimpleAnomalyDetector::setThreshold(float t)
-{
-    this->threshold = t;
-    return t;
+float SimpleAnomalyDetector::setThreshold(float t) {
+  this->threshold = t;
+  return t;
 }
 /**
  * @brief Create a Correlation struct that defined in "SimpleAnomalyDetector.h".
@@ -31,42 +29,41 @@ float SimpleAnomalyDetector::setThreshold(float t)
  * @return correlatedFeatures
  */
 correlatedFeatures createCorrelation(string s1, string s2,
-    const TimeSeries& ts)
-{
-    correlatedFeatures correlated;
-    auto mp = ts.getData();
-    int position1 = ts.getFeaturePosition(s1);
-    int position2 = ts.getFeaturePosition(s2);
-    int size;
-    float max = 0;
-    float* x;
-    float* y;
+                                     const TimeSeries &ts) {
+  correlatedFeatures correlated;
+  auto mp = ts.getData();
+  int position1 = ts.getFeaturePosition(s1);
+  int position2 = ts.getFeaturePosition(s2);
+  int size;
+  float max = 0;
+  float *x;
+  float *y;
 
-    correlated.feature1 = (position1 < position2) ? s1 : s2;
-    correlated.feature2 = (position2 > position1) ? s2 : s1;
-    vector<float> v1 = ts.getFeatureValues(correlated.feature1);
-    vector<float> v2 = ts.getFeatureValues(correlated.feature2);
-    x = v1.data();
-    y = v2.data();
-    size = v2.size();
-    Point** points = new Point*[size];
+  correlated.feature1 = (position1 < position2) ? s1 : s2;
+  correlated.feature2 = (position2 > position1) ? s2 : s1;
+  vector<float> v1 = ts.getFeatureValues(correlated.feature1);
+  vector<float> v2 = ts.getFeatureValues(correlated.feature2);
+  x = v1.data();
+  y = v2.data();
+  size = v2.size();
+  Point **points = new Point *[size];
 
-    for (int i = 0; i < size; ++i) {
-        points[i] = new Point(x[i], y[i]);
-    }
+  for (int i = 0; i < size; ++i) {
+    points[i] = new Point(x[i], y[i]);
+  }
 
-    correlated.lin_reg = linear_reg(x, y, size);
+  correlated.lin_reg = linear_reg(x, y, size);
 
-    for (int i = 0; i < size; ++i) {
-        if (dev(*points[i], correlated.lin_reg) >= max)
-            max = dev(*points[i], correlated.lin_reg);
-    }
+  for (int i = 0; i < size; ++i) {
+    if (dev(*points[i], correlated.lin_reg) >= max)
+      max = dev(*points[i], correlated.lin_reg);
+  }
 
-    max = max * 1.1;
-    correlated.threshold = max;
-    correlated.points = points;
-    correlated.size = size;
-    return correlated;
+  max = max * 1.1;
+  correlated.threshold = max;
+  correlated.points = points;
+  correlated.size = size;
+  return correlated;
 }
 
 /**
@@ -78,20 +75,19 @@ correlatedFeatures createCorrelation(string s1, string s2,
  * @return AnomalyReport
  */
 AnomalyReport SimpleAnomalyDetector::createReport(correlatedFeatures f, Point p,
-    int i)
-{
+                                                  int i) {
 
-    Line line = f.lin_reg;
-    string description;
-    string feature1 = f.feature1;
-    string feature2 = f.feature2;
-    float disThreshold = f.threshold; // the distance threshold- the maximum
-        // valid length between a point to the line
-    if (dev(p, line) > disThreshold) {
-        description = feature1 + '-' + feature2;
-        return AnomalyReport(description, i + 1);
-    }
-    return AnomalyReport("", -1);
+  Line line = f.lin_reg;
+  string description;
+  string feature1 = f.feature1;
+  string feature2 = f.feature2;
+  float disThreshold = f.threshold; // the distance threshold- the maximum
+                                    // valid length between a point to the line
+  if (dev(p, line) > disThreshold) {
+    description = feature1 + '-' + feature2;
+    return AnomalyReport(description, i + 1);
+  }
+  return AnomalyReport("", -1);
 }
 
 /**
@@ -100,47 +96,46 @@ AnomalyReport SimpleAnomalyDetector::createReport(correlatedFeatures f, Point p,
  *
  * @param ts given data.
  */
-void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts)
-{
-    map<string, vector<float>>::iterator it1;
-    map<string, vector<float>>::iterator it2;
-    vector<correlatedFeatures> cf;
+void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
+  map<string, vector<float>>::iterator it1;
+  map<string, vector<float>>::iterator it2;
+  vector<correlatedFeatures> cf;
 
-    correlatedFeatures c;
-    string feature1;
-    string feature2;
-    string temp;
-    auto mp = ts.getData();
-    auto featuresNames = ts.getFeaturesNames();
-    bool flag;
-    float threshold;
-    float correlation = 0;
-    float* x;
-    float* y;
+  correlatedFeatures c;
+  string feature1;
+  string feature2;
+  string temp;
+  auto mp = ts.getData();
+  auto featuresNames = ts.getFeaturesNames();
+  bool flag;
+  float threshold;
+  float correlation = 0;
+  float *x;
+  float *y;
 
-    for (it1 = mp.begin(); it1 != mp.end(); it1++) {
-        flag = false;
-        threshold = 0.5;
-        feature1 = it1->first;
-        x = it1->second.data();
-        for (it2 = ++it1; it2 != mp.end(); it2++) {
-            feature2 = it2->first;
-            y = it2->second.data();
-            correlation = pearson(x, y, it2->second.size());
-            if (fabs(correlation) >= threshold) {
-                threshold = correlation;
-                temp = feature2;
-                flag = true;
-            }
-        }
-        if (flag) {
-            c = createCorrelation(feature1, temp, ts);
-            c.corrlation = threshold;
-            cf.push_back(c);
-        }
-        --it1;
+  for (it1 = mp.begin(); it1 != mp.end(); it1++) {
+    flag = false;
+    threshold = 0.5;
+    feature1 = it1->first;
+    x = it1->second.data();
+    for (it2 = ++it1; it2 != mp.end(); it2++) {
+      feature2 = it2->first;
+      y = it2->second.data();
+      correlation = pearson(x, y, it2->second.size());
+      if (fabs(correlation) >= threshold) {
+        threshold = correlation;
+        temp = feature2;
+        flag = true;
+      }
     }
-    this->cf = cf;
+    if (flag) {
+      c = createCorrelation(feature1, temp, ts);
+      c.corrlation = threshold;
+      cf.push_back(c);
+    }
+    --it1;
+  }
+  this->cf = cf;
 }
 
 /**
@@ -149,23 +144,22 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts)
  * @param ts given data.
  * @return vector<AnomalyReport> of the anomalies reports.
  */
-vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts)
-{
-    vector<AnomalyReport> ar;
-    vector<correlatedFeatures>::iterator it;
-    auto mp = ts.getData();
-    auto cf = this->cf;
-    auto size = cf[0].size;
-    float d;
-    float threshold;
-    for (it = cf.begin(); it != cf.end(); it++) {
-        for (int i = 0; i < size; ++i) {
-            Point p(mp[it->feature1][i], mp[it->feature2][i]);
-            AnomalyReport r = createReport(*it, p, i);
-            if (r.timeStep == -1)
-                continue;
-            ar.push_back(r);
-        }
+vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+  vector<AnomalyReport> ar;
+  vector<correlatedFeatures>::iterator it;
+  auto mp = ts.getData();
+  auto cf = this->cf;
+  auto size = cf[0].size;
+  float d;
+  float threshold;
+  for (it = cf.begin(); it != cf.end(); it++) {
+    for (int i = 0; i < size; ++i) {
+      Point p(mp[it->feature1][i], mp[it->feature2][i]);
+      AnomalyReport r = createReport(*it, p, i);
+      if (r.timeStep == -1)
+        continue;
+      ar.push_back(r);
     }
-    return ar;
+  }
+  return ar;
 }
